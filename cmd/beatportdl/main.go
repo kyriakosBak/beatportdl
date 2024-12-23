@@ -37,6 +37,9 @@ func main() {
 		Pause()
 	}
 
+	flag.Parse()
+	inputArgs := flag.Args()
+
 	// Append path if present in args
 	if len(inputArgs) > 0 && strings.HasPrefix(inputArgs[0], "-PATH") {
 		newPath := inputArgs[0][5:]
@@ -78,9 +81,6 @@ func main() {
 	}
 
 	app.bp = bp
-
-	flag.Parse()
-	inputArgs := flag.Args()
 
 	for _, arg := range inputArgs {
 		if strings.HasPrefix(arg, "-PATH") {

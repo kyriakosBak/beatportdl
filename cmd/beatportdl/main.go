@@ -3,14 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/fatih/color"
-	"github.com/vbauerster/mpb/v8"
 	"io"
 	"os"
 	"strings"
 	"sync"
 	"unspok3n/beatportdl/config"
 	"unspok3n/beatportdl/internal/beatport"
+
+	"github.com/fatih/color"
+	"github.com/vbauerster/mpb/v8"
 )
 
 const (
@@ -37,13 +38,13 @@ func main() {
 		Pause()
 	}
 
+	pathFlag := flag.String("PATH", "", "Path to set the downloads directory")
 	flag.Parse()
 	inputArgs := flag.Args()
 
-	// Append path if present in args
-	if len(inputArgs) > 0 && strings.HasPrefix(inputArgs[0], "-PATH") {
-		newPath := inputArgs[0][5:]
-		cfg.DownloadsDirectory = newPath 
+	// Update DownloadsDirectory if -PATH is provided
+	if *pathFlag != "" {
+		cfg.DownloadsDirectory = *pathFlag
 	}
 
 	app := &application{
@@ -83,9 +84,6 @@ func main() {
 	app.bp = bp
 
 	for _, arg := range inputArgs {
-		if strings.HasPrefix(arg, "-PATH") {
-			continue
-		}
 		if strings.HasSuffix(arg, ".txt") {
 			app.parseTextFile(arg)
 		} else {

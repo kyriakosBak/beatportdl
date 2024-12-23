@@ -37,6 +37,12 @@ func main() {
 		Pause()
 	}
 
+	// Append path if present in args
+	if len(inputArgs) > 0 && strings.HasPrefix(inputArgs[0], "-PATH") {
+		newPath := inputArgs[0][5:]
+		cfg.DownloadsDirectory = newPath 
+	}
+
 	app := &application{
 		config:      cfg,
 		downloadSem: make(chan struct{}, cfg.MaxDownloadWorkers),
@@ -77,6 +83,9 @@ func main() {
 	inputArgs := flag.Args()
 
 	for _, arg := range inputArgs {
+		if strings.HasPrefix(arg, "-PATH") {
+			continue
+		}
 		if strings.HasSuffix(arg, ".txt") {
 			app.parseTextFile(arg)
 		} else {

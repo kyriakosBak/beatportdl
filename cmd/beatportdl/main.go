@@ -84,23 +84,21 @@ func main() {
 		}
 	}
 
-	for {
-		if len(app.urls) == 0 {
-			app.mainPrompt()
-		}
-
-		app.pbp = mpb.New(mpb.WithAutoRefresh(), mpb.WithOutput(color.Output))
-		app.logWriter = app.pbp
-
-		for _, url := range app.urls {
-			app.background(func() {
-				app.handleUrl(url)
-			})
-		}
-
-		app.wg.Wait()
-		app.pbp.Shutdown()
-
-		app.urls = []string{}
+	if len(app.urls) == 0 {
+		app.mainPrompt()
 	}
+
+	app.pbp = mpb.New(mpb.WithAutoRefresh(), mpb.WithOutput(color.Output))
+	app.logWriter = app.pbp
+
+	for _, url := range app.urls {
+		app.background(func() {
+			app.handleUrl(url)
+		})
+	}
+
+	app.wg.Wait()
+	app.pbp.Shutdown()
+
+	app.urls = []string{}
 }
